@@ -1,0 +1,25 @@
+{
+  "name": "togxp",
+  "version": "1.0.0",
+  "description": "Toggl to crm timesheet export script",
+  "main": "index.js",
+  "dependencies": {
+    "cli-table": "^0.3.1",
+    "moment": "^2.24.0",
+    "node-fetch": "^1.7.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chao-master/togxp.git"
+  },
+  "author": "watson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chao-master/togxp/issues"
+  },
+  "homepage": "https://github.com/chao-master/togxp#readme"
+}
