@@ -1,0 +1,20 @@
+{
+    "Toggl":{
+        "ApiKey": "<apiKey>",
+        "Workspace": "<workSpace>"
+    },
+    "Crm":{
+        "Username":"<Domain>/<user>"
+    },
+    "Projects":[
+        {
+            "TitleRegex": "<A Regex Expression>",
+            "Order": "<Order Id>",
+            "Category": "<Category>"
+        },{
+            "Title": "<A String>",
+            "Order": "<Order Id>",
+            "Category": "<Category>"
+        }
+    ]
+}
