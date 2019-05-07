@@ -31,6 +31,7 @@ let API_KEY = null;
 let WORKSPACE = null;
 let PROJECT_CONFIGS = null;
 let USERNAME = null;
+let DEFAULT_LOC = null;
 
 async function LoadConfig(){
     const rawConfig = await promisify(fs.readFile)(path.join(__dirname,"config.json"));
@@ -40,6 +41,7 @@ async function LoadConfig(){
     WORKSPACE = config.Toggl.Workspace;
 
     USERNAME = config.Crm.Username;
+    DEFAULT_LOC = config.Output.DefaultLocation;
 
     PROJECT_CONFIGS = config.Projects.map(input => {
         if("TitleRegex" in input){
@@ -200,14 +202,17 @@ function help(){
     --yesterday:
         sets --since and --until to yesterday
     --outfile:
-        sets where to ouput
-        if blank: default of /tmp/timesheet.csv is used
-        if obmitted: prints to stdout only
+        sets where to output
+        if blank: "${DEFAULT_LOC}" is used
+        if omitted: prints to stdout only
 `)
 }
 
 async function run(){
     var ops = {};
+
+    await LoadConfig();
+
     for(let i=2;i<process.argv.length;i++){
         let input = process.argv[i];
         switch (input){
@@ -232,16 +237,14 @@ async function run(){
                 if (process.argv.length != i+1 && !process.argv[i+1].startsWith("-")){
                     ops[input.substr(2)] = process.argv[++i];
                 } else {
-                    console.log("using defualt out file /tmp/timesheet.csv")
-                    ops[input.substr(2)] = `${process.env["TMP"]}/timesheet.csv`;
+                    console.log(`using defualt out file ${DEFAULT_LOC}`)
+                    ops[input.substr(2)] = DEFAULT_LOC;
                 }
                 break;
             default:
                 console.error(`unknown input ${input}`);
         }
     }
-
-    await LoadConfig();
 
     let result = await getFromToggle(ops);
 

@@ -6,6 +6,9 @@
     "Crm":{
         "Username":"<Domain>/<user>"
     },
+    "Output":{
+        "DefaultLocation":"./timesheet.csv"
+    },
     "Projects":[
         {
             "TitleRegex": "<A Regex Expression>",
