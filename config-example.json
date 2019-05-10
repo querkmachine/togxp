@@ -16,6 +16,7 @@
             "ProjectRegex": "<RegExp; Optional; Do not specify with Project>",
             "Project": "<String; Optional; Do not specify with ProjectRegex>",
             "Order": "<Order Id>",
+            "Opportunity": "<Opportunity Id>",
             "Category": "<Category>"
         }
     ]

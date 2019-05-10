@@ -76,7 +76,8 @@ function getOrderAndCategoryForProject(project,client){
     for (config of PROJECT_CONFIGS){
         if ( CheckTest(config.Project,project) && CheckTest(config.Client,client) ){
             return {
-                order:config.order,
+                order:config.order||"",
+                opportunity:config.opportunity||"",
                 category:config.category
             }
         }
@@ -177,6 +178,7 @@ async function getFromToggle({since,until}){
             let config = getOrderAndCategoryForProject(r.project,r.client);
             order = config.order;
             defaultCat = config.category;
+            opportunity = config.opportunity
         } catch (e){
             console.error(`Cannot match project for "${r.project}", add to config to continue`);
             continue;
@@ -199,7 +201,7 @@ async function getFromToggle({since,until}){
             USERNAME,
             cas,
             order,
-            "", //Opportunity
+            opportunity, //Opportunity
             "", //Quote
             "" //Invoice
         ])
