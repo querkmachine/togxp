@@ -43,7 +43,7 @@ async function LoadConfig(){
     USERNAME = config.Crm.Username;
     DEFAULT_LOC = config.Output.DefaultLocation;
 
-    PROJECT_CONFIGS = config.Projects.map(input => {
+    PROJECT_CONFIGS = config.Projects.map((input,i) => {
         var copy = {...input};
         if ("ProjectRegex" in copy){
             copy.Project = new RegExp(input.ProjectRegex);
@@ -52,6 +52,9 @@ async function LoadConfig(){
         if ("ClientRegex" in copy){
             copy.Client = new RegExp(input.ClientRegex);
             delete copy.ClientRegex;
+        }
+        if(!("Order" in copy) && !("Opportunity" in copy)){
+            throw `Bad configuration, Rule {i} lacks either Order or Opportunity`;
         }
         return copy;
     });
@@ -76,9 +79,9 @@ function getOrderAndCategoryForProject(project,client){
     for (config of PROJECT_CONFIGS){
         if ( CheckTest(config.Project,project) && CheckTest(config.Client,client) ){
             return {
-                order:config.order||"",
-                opportunity:config.opportunity||"",
-                category:config.category
+                order:config.Order||"",
+                opportunity:config.Opportunity||"",
+                category:config.Category
             }
         }
     }
