@@ -5,8 +5,12 @@
   "main": "index.js",
   "dependencies": {
     "cli-table": "^0.3.1",
+    "cookie": "^0.4.0",
+    "electron": "^5.0.1",
     "moment": "^2.24.0",
-    "node-fetch": "^1.7.3"
+    "node-fetch": "^1.7.3",
+    "request-promise-native": "^1.0.7",
+    "tough-cookie": "^3.0.1"
   },
   "devDependencies": {},
   "scripts": {
