@@ -29,9 +29,11 @@ const VALID_CATS = [
 
 let API_KEY = null;
 let WORKSPACE = null;
-let PROJECT_CONFIGS = null;
 let USERNAME = null;
 let DEFAULT_LOC = null;
+let HALT_ON_MISSING = false;
+/** @type {({Project?:(string|RegExp),Client?:(string|RegExp),Ignore?:boolean,Order?:string,Opportunity?:string,Category?:string})[]} */
+let PROJECT_CONFIGS = null;
 
 async function LoadConfig(){
     const rawConfig = await promisify(fs.readFile)(path.join(__dirname,"config.json"));
@@ -42,6 +44,10 @@ async function LoadConfig(){
 
     USERNAME = config.Crm.Username;
     DEFAULT_LOC = config.Output.DefaultLocation;
+
+    if ("HaltOnMissing" in config.Settings){
+        HALT_ON_MISSING = config.Settings.HaltOnMissing;
+    }
 
     PROJECT_CONFIGS = config.Projects.map((input,i) => {
         var copy = {...input};
@@ -183,7 +189,11 @@ async function getFromToggle({since,until}){
             defaultCat = config.category;
             opportunity = config.opportunity
         } catch (e){
-            console.error(`Cannot match project for "${r.project}", add to config to continue`);
+            console.error(`Cannot match for project:client for "${r.project}":"${r.client}", used by time slot at "${start}". Add to config to process`);
+            if(HALT_ON_MISSING){
+                console.error("Project is set to halt on missing config. Aborting.")
+                throw e;
+            }
             continue;
         }
         let {cas,description,category} = parseDescription(r.description);
