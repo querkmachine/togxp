@@ -59,8 +59,8 @@ async function LoadConfig(){
             copy.Client = new RegExp(input.ClientRegex);
             delete copy.ClientRegex;
         }
-        if(!("Order" in copy) && !("Opportunity" in copy)){
-            throw `Bad configuration, Rule {i} lacks either Order or Opportunity`;
+        if(!("Order" in copy) && !("Opportunity" in copy) && !(copy.Ignore === true)){
+            throw `Bad configuration, Rule {i} lacks both Order and Opportunity, and Ignore is not true`;
         }
         return copy;
     });
@@ -82,12 +82,13 @@ function CheckTest(test,against){
  * @param {string} project 
  */
 function getOrderAndCategoryForProject(project,client){
-    for (config of PROJECT_CONFIGS){
+    for (const config of PROJECT_CONFIGS){
         if ( CheckTest(config.Project,project) && CheckTest(config.Client,client) ){
             return {
+                ignore:config.Ignore || false,
                 order:config.Order||"",
                 opportunity:config.Opportunity||"",
-                category:config.Category
+                category:config.Category,
             }
         }
     }
@@ -185,6 +186,14 @@ async function getFromToggle({since,until}){
         let order, defaultCat;
         try {
             let config = getOrderAndCategoryForProject(r.project,r.client);
+            if (config === undefined){
+                throw new Error(`Missing config for: ${r.project}, ${r.client}`);
+            }
+
+            if (config.ignore){
+                continue;
+            }
+
             order = config.order;
             defaultCat = config.category;
             opportunity = config.opportunity
