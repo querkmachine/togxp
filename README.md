@@ -19,7 +19,7 @@ You can either specify a Regex rule or a plain string rule. If you specify both 
 * `ClientRegex` - A regular expression to match against the name of the client for the toggl time entry.
 * `Client` - A string that needs to exactly match the name of the client.
 * `ProjectRegex` - A regular expression to match against the name of the project for the toggl time entry.
-* `Project` - A string that needs to exactly match the name of the client.
+* `Project` - A string that needs to exactly match the name of the project.
 
 Lookup rules then state how to log the information into CRM. At least one of order or opportunity needs to specified.
 
