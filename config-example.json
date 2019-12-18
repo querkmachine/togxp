@@ -11,12 +11,12 @@
     },
     "Projects":[
         {
-            "TitleRegex": "<A Regex Expression>",
+            "ClientRegex": "<RegExp; Optional; Do not specify with Client>",
+            "Client": "<String; Optional; Do not specify with ClientRegex>",
+            "ProjectRegex": "<RegExp; Optional; Do not specify with Project>",
+            "Project": "<String; Optional; Do not specify with ProjectRegex>",
             "Order": "<Order Id>",
-            "Category": "<Category>"
-        },{
-            "Title": "<A String>",
-            "Order": "<Order Id>",
+            "Opportunity": "<Opportunity Id>",
             "Category": "<Category>"
         }
     ]

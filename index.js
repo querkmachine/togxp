@@ -43,24 +43,46 @@ async function LoadConfig(){
     USERNAME = config.Crm.Username;
     DEFAULT_LOC = config.Output.DefaultLocation;
 
-    PROJECT_CONFIGS = config.Projects.map(input => {
-        if("TitleRegex" in input){
-            return [new RegExp(input.TitleRegex),input.Order,input.Category];
-        } else {
-            return [input.Title,input.Order,input.Category];
+    PROJECT_CONFIGS = config.Projects.map((input,i) => {
+        var copy = {...input};
+        if ("ProjectRegex" in copy){
+            copy.Project = new RegExp(input.ProjectRegex);
+            delete copy.ProjectRegex;
         }
+        if ("ClientRegex" in copy){
+            copy.Client = new RegExp(input.ClientRegex);
+            delete copy.ClientRegex;
+        }
+        if(!("Order" in copy) && !("Opportunity" in copy)){
+            throw `Bad configuration, Rule {i} lacks either Order or Opportunity`;
+        }
+        return copy;
     });
 
 }
 
 /**
- * Looks up the given project in the config, and returns the Order and default category.
+ * Checks if a test is true, or missing
+ * @param {string|RegExp} test The test to run
+ * @param {string} against The string to test against
+ */
+function CheckTest(test,against){
+    return !test || (test.test && test.test(against)) || test === against;
+}
+
+/**
+ * Looks up the given project & client in the config, and returns the Order and default category.
+ * If multiple match the first is returned
  * @param {string} project 
  */
-function getOrderAndCategoryForProject(project){
-    for ([query,order,category] of PROJECT_CONFIGS){
-        if ((query.test && query.test(project)) || query === project){
-            return {order,category}
+function getOrderAndCategoryForProject(project,client){
+    for (config of PROJECT_CONFIGS){
+        if ( CheckTest(config.Project,project) && CheckTest(config.Client,client) ){
+            return {
+                order:config.Order||"",
+                opportunity:config.Opportunity||"",
+                category:config.Category
+            }
         }
     }
 }
@@ -156,9 +178,10 @@ async function getFromToggle({since,until}){
         let durationMin = Math.round((end-start)/(1000*60));
         let order, defaultCat;
         try {
-            let config = getOrderAndCategoryForProject(r.project);
+            let config = getOrderAndCategoryForProject(r.project,r.client);
             order = config.order;
             defaultCat = config.category;
+            opportunity = config.opportunity
         } catch (e){
             console.error(`Cannot match project for "${r.project}", add to config to continue`);
             continue;
@@ -181,7 +204,7 @@ async function getFromToggle({since,until}){
             USERNAME,
             cas,
             order,
-            "", //Opportunity
+            opportunity, //Opportunity
             "", //Quote
             "" //Invoice
         ])
