@@ -21,8 +21,9 @@ You can either specify a Regex rule or a plain string rule. If you specify both 
 * `ProjectRegex` - A regular expression to match against the name of the project for the toggl time entry.
 * `Project` - A string that needs to exactly match the name of the client.
 
-Lookup rules then state how to log the information into CRM. At least one of order or opportunity needs to specified.
+Lookup rules then state how to log the information into CRM. At least one of `Order`, `Opportunity`, or `Ignore` needs to be specified/set
 
+* `Ignore` - If `true` (no other truthy values are respected), then time entries matching this rule are omitted from output.
 * `Order` - The ID of the Order to log against.
 * `Opportunity` - The ID of the Opportunity to log against.
 * `Category` - The Category to use in the order, if one isn't stated in the toggl description.
